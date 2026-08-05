@@ -30,13 +30,11 @@ const EventSchema = new mongoose.Schema({
     required: true,
     enum: ['Technology', 'Art', 'Sports', 'Science', 'Business', 'Entertainment', 'Volunteering', 'Health', 'Other'],
   },
-  // ربط الفعالية برئيس النادي اللي أنشأها
   organizer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
-  // مصفوفة لتخزين معرفات الطلاب اللي سجلوا بالفعالية
   attendees: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
@@ -44,7 +42,11 @@ const EventSchema = new mongoose.Schema({
   maxAttendees: {
     type: Number,
     default: 100,
-  }
+  },
+  image: {
+    type: String,
+    default: "",
+  },
 }, {
   timestamps: true
 });
@@ -59,7 +61,8 @@ function validateCreateEvent(obj) {
     date: Joi.date().required(),
     location: Joi.string().trim().required(),
     category: Joi.string().valid('Technology', 'Art', 'Sports', 'Science', 'Business', 'Entertainment', 'Volunteering', 'Health', 'Other').required(),
-    maxAttendees: Joi.number().min(1).optional()
+    maxAttendees: Joi.number().min(1).optional(),
+    image: Joi.string().allow('', null).optional(),
   });
   return schema.validate(obj);
 }

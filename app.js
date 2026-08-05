@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const dotenv = require("dotenv").config();
 const connectToDB = require('./config/db');
 const helmet = require("helmet");
@@ -13,13 +14,12 @@ const app = express();
 // Apply Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+}));
 app.use(cors());
 
-// مسار تجريبي للتأكد إن السيرفر شغال وبيستقبل طلبات
-app.get('/api', (req, res) => {
-  res.json({ message: "Welcome to Eventify API 🚀" });
-});
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));

@@ -11,6 +11,8 @@ const createEvent = asyncHandler(async (req, res) => {
   const { error } = validateCreateEvent(req.body);
   if (error) return res.status(400).json({ message: error.details[0].message });
 
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : "";
+
   const event = new Event({
     title: req.body.title,
     description: req.body.description,
@@ -18,12 +20,14 @@ const createEvent = asyncHandler(async (req, res) => {
     location: req.body.location,
     category: req.body.category,
     maxAttendees: req.body.maxAttendees,
-    organizer: req.user.id, 
+    organizer: req.user.id,
+    image: imagePath,
   });
 
   const result = await event.save();
   res.status(201).json(result);
 });
+
 
 /**
  *  @desc    Get All Events
@@ -60,7 +64,6 @@ const deleteEvent = asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.id);
   if (!event) return res.status(404).json({ message: "Event not found" });
 
-  // التأكد أن من يحذف الفعالية هو نفس النادي الذي أنشأها
   if (event.organizer.toString() !== req.user.id && !req.user.isAdmin) {
     return res.status(403).json({ message: "You are not allowed to delete this event" });
   }
