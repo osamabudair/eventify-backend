@@ -39,7 +39,19 @@ const getAllEvents = asyncHandler(async (req, res) => {
   res.status(200).json(events);
 });
 
+/**
+ *  @desc    Get My Events (Club Leader)
+ *  @route   /api/events/me
+ *  @method  GET
+ *  @access  private (Only Club Leaders & Admins)
+ */
+const getMyEvents = asyncHandler(async (req, res) => {
+  const events = await Event.find({ organizer: req.user.id }).sort({ createdAt: -1 });
+  res.status(200).json(events);
+});
+
 module.exports = {
   createEvent,
   getAllEvents,
+  getMyEvents,
 };
