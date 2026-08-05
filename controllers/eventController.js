@@ -50,8 +50,28 @@ const getMyEvents = asyncHandler(async (req, res) => {
   res.status(200).json(events);
 });
 
+/**
+ *  @desc    Delete Event
+ *  @route   /api/events/:id
+ *  @method  DELETE
+ *  @access  private (Only Event Owner or Admin)
+ */
+const deleteEvent = asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.id);
+  if (!event) return res.status(404).json({ message: "Event not found" });
+
+  // التأكد أن من يحذف الفعالية هو نفس النادي الذي أنشأها
+  if (event.organizer.toString() !== req.user.id && !req.user.isAdmin) {
+    return res.status(403).json({ message: "You are not allowed to delete this event" });
+  }
+
+  await Event.findByIdAndDelete(req.params.id);
+  res.status(200).json({ message: "Event deleted successfully" });
+});
+
 module.exports = {
   createEvent,
   getAllEvents,
   getMyEvents,
+  deleteEvent
 };

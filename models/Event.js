@@ -28,7 +28,7 @@ const EventSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Technology', 'Art', 'Sports', 'Science', 'Business', 'Other'], // بتقدر تعدل الأقسام زي ما بدك
+    enum: ['Technology', 'Art', 'Sports', 'Science', 'Business', 'Entertainment', 'Volunteering', 'Health', 'Other'],
   },
   // ربط الفعالية برئيس النادي اللي أنشأها
   organizer: {
@@ -58,7 +58,7 @@ function validateCreateEvent(obj) {
     description: Joi.string().trim().min(10).required(),
     date: Joi.date().required(),
     location: Joi.string().trim().required(),
-    category: Joi.string().valid('Technology', 'Art', 'Sports', 'Science', 'Business', 'Other').required(),
+    category: Joi.string().valid('Technology', 'Art', 'Sports', 'Science', 'Business', 'Entertainment', 'Volunteering', 'Health', 'Other').required(),
     maxAttendees: Joi.number().min(1).optional()
   });
   return schema.validate(obj);
