@@ -43,6 +43,11 @@ const EventSchema = new mongoose.Schema({
     type: Number,
     default: 100,
   },
+  time: {
+    type: String,
+    required: true,
+    default: "10:00 AM - 02:00 PM"
+  },
   image: {
     type: String,
     default: "",
@@ -62,6 +67,7 @@ function validateCreateEvent(obj) {
     location: Joi.string().trim().required(),
     category: Joi.string().valid('Technology', 'Art', 'Sports', 'Science', 'Business', 'Entertainment', 'Volunteering', 'Health', 'Other').required(),
     maxAttendees: Joi.number().min(1).optional(),
+    time: Joi.string().required(),
     image: Joi.string().allow('', null).optional(),
   });
   return schema.validate(obj);

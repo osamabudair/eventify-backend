@@ -17,6 +17,7 @@ const createEvent = asyncHandler(async (req, res) => {
     title: req.body.title,
     description: req.body.description,
     date: req.body.date,
+    time: req.body.time,
     location: req.body.location,
     category: req.body.category,
     maxAttendees: req.body.maxAttendees,
@@ -72,9 +73,27 @@ const deleteEvent = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Event deleted successfully" });
 });
 
+
+/**
+ *  @desc    Get Single Event by ID
+ *  @route   /api/events/:id
+ *  @method  GET
+ *  @access  public
+ */
+const getEventById = asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.id).populate('organizer', 'username');
+  
+  if (!event) {
+    return res.status(404).json({ message: "Event not found" });
+  }
+  
+  res.status(200).json(event);
+});
+
 module.exports = {
   createEvent,
   getAllEvents,
   getMyEvents,
-  deleteEvent
+  deleteEvent,
+  getEventById,
 };
